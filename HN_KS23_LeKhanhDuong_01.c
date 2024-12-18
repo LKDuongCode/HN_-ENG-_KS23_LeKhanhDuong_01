@@ -24,11 +24,7 @@ int main() {
     head->next->data = 20; 
     head->next->next = NULL; 
     
-    
     int choice;
-    int value;
-    int position;
-
     do {
  		printMenu();
         scanf("%d", &choice);
