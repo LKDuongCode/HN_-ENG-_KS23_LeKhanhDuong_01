@@ -1,105 +1,158 @@
 #include <stdio.h>
 #include <stdlib.h>
-
-// cau truc node
 struct Node {
     int data;
     struct Node* next;
 };
-
-void addFirst(struct Node** head, int value);
-void addLast(struct Node** head, int value);
-void insertAtPosition(struct Node** head, int value, int position);
-void deleteFirst(struct Node** head);
-void deleteLast(struct Node** head);
-void deleteByValue(struct Node** head, int value);
-void searchByValue(struct Node* head, int value);
+void printMenu(); 
 void printList(struct Node* head);
+
+void addToHead(struct Node** head, int newData);
+void addToTail(struct Node** head, int newTail);
+
+void addAtPos(struct Node** head, int value, int pos);
+void deleteFromHead(struct Node** head);
+void deleteFromTail(struct Node** head);
+void deleteByValue(struct Node** head, int deleteValue);
+void searchByValue(struct Node* head, int searchValue);
 
 
 int main() {
-    int choice, value, position;
-    struct Node* head = NULL;  
-    addFirst(&head, 20);  
-    addFirst(&head, 10); 
+	struct Node* head = (struct Node*)malloc(sizeof(struct Node));  
+    head->data = 10;  
+    head->next = (struct Node*)malloc(sizeof(struct Node)); 
+    head->next->data = 20; 
+    head->next->next = NULL; 
+    
+    
+    int choice;
+    int value;
+    int position;
+
     do {
-        printf("==================menu=================\n");
-        printf("1. them phan tu vao dau danh sach\n");
-        printf("2. them phan tu vao cuoi danh sach\n");
-        printf("3. chen phan tu vao vi tri cu the\n");
-        printf("4. xoa phan tu dau danh sach\n");
-        printf("5. xoa phan tu cuoi danh sach\n");
-        printf("6. xoa phan tu theo gia tri\n");
-        printf("7. tim kiem phan tu theo gia tri\n");
-        printf("8. in danh sach cac gia tri ra man hinh\n");
-        printf("9. thoat\n");
-        printf("========================================\n");
-        printf("nhap lua chon cua ban: ");
+ 		printMenu();
         scanf("%d", &choice);
 
         switch (choice) {
             case 1:
-                printf("nhap gia tri phan tu: ");
-                scanf("%d", &value);
-                addFirst(&head, value);
+                printf("\t \t \t \t Nhap gia tri phan tu moi: ");
+                int newData;
+                scanf("%d", &newData);
+                addToHead(&head, newData);
+                printList(head);
                 break;
             case 2:
-                printf("nhap gia tri phan tu: ");
-                scanf("%d", &value);
-                addLast(&head, value);
+                printf("\t \t \t \t nhap gia tri phan tu moi: ");
+                int newTail;
+                scanf("%d", &newTail);
+                addToTail(&head, newTail);
+                printList(head);
                 break;
             case 3:
-                printf("nhap gia tri phan tu va vi tri: ");
-                scanf("%d %d", &value, &position);
-                insertAtPosition(&head, value, position);
+                printf("\t \t \t \t Nhap vi tri muon chen: ");
+                int newDataInsert;
+            	int insertPos;
+            	scanf("%d", &insertPos);
+            	printf("\t \t \t \t Nhap gia tri chen:");
+            	scanf("%d",&newDataInsert);
+                
+                addAtPos(&head, newDataInsert, insertPos);
+                printList(head);
                 break;
             case 4:
-                deleteFirst(&head);
+                deleteFromHead(&head);
+                printList(head);
                 break;
             case 5:
-                deleteLast(&head);
+                deleteFromTail(&head);
+                printList(head);
                 break;
             case 6:
-                printf("nhap gia tri phan tu can xoa: ");
-                scanf("%d", &value);
-                deleteByValue(&head, value);
+                printf("\t \t \t \t Nhap gia tri phan tu can xoa: ");
+                int deleteValue;
+                scanf("%d", &deleteValue);
+                deleteByValue(&head, deleteValue);
+                printList(head);
                 break;
             case 7:
-                printf("nhap gia tri can tim: ");
-                scanf("%d", &value);
-                searchByValue(head, value);
+                printf("\t \t \t \t Nhap gia tri can tim: ");
+                int searchValue;
+                scanf("%d", &searchValue);
+                searchByValue(head, searchValue);
+                printList(head);
                 break;
             case 8:
                 printList(head);
                 break;
             case 9:
-                printf("thoat chuong trinh!\n");
+                printf("\t \t \t \t thoat chuong trinh!\n");
                 break;
             default:
-                printf("lua chon khong hop le!\n");
+                printf("\t \t \t \t lua chon khong hop le!\n");
         }
     } while (choice != 9);
 
     return 0;
 }
 
-void addFirst(struct Node** head, int value) {
+void printMenu() {
+    printf("\t \t \t \t ================== [MENU] =================\n");
+    printf("\n");
+    printf("\t \t \t \t [1]. Chen phan tu vao dau linked list\n");
+    printf("\t \t \t \t [2]. Chen phan tu vao cuoi linked list\n");
+    printf("\t \t \t \t [3]. Chen phan tu vao vi tri cu the\n");
+    printf("\t \t \t \t [4]. Xoa phan tu dau linked list\n");
+    printf("\t \t \t \t [5]. Xoa phan tu cuoi linked list\n");
+    printf("\t \t \t \t [6]. Xoa phan tu theo gia tri\n");
+    printf("\t \t \t \t [7]. Tim kiem phan tu theo gia tri\n");
+    printf("\t \t \t \t [8]. In cac gia tri ra man hinh\n");
+    printf("\t \t \t \t [9]. Thoat\n");
+    printf("\n");
+    printf("\t \t \t \t -----------------------------------------\n");
+    printf("\t \t \t \t Nhap lua chon: ");
+}
+
+void printList(struct Node* head) {
+	//b1 kiem tra rong
+    if (head == NULL) {
+        printf("\t \t \t \t danh sach trong!\n");
+        return;
+    }
+	
+	//b2 duyet ds
+    struct Node* temp = head; // tao con tro duyet
+    printf("\t \t \t \t ");
+    while (temp != NULL) {
+        printf("%d -> ", temp->data);
+        temp = temp->next;
+    }
+    printf("NULL\n");
+}
+
+
+void addToHead(struct Node** head, int newData) {
+	//b1 tao node moi
     struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
-    newNode->data = value;
+    
+    //b2 gan gia tri va con tro
+    newNode->data = newData;
     newNode->next = *head;
     *head = newNode;
 }
 
-void addLast(struct Node** head, int value) {
+void addToTail(struct Node** head, int newTail) {
+	//b1 tao node moi
     struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
-    newNode->data = value;
+    newNode->data = newTail;
     newNode->next = NULL;
-
+    
+	//kiem tra rong
     if (*head == NULL) {
         *head = newNode;
         return;
     }
-
+	
+	//b2 duyet den cuoi va thay con tro
     struct Node* temp = *head;
     while (temp->next != NULL) {
         temp = temp->next;
@@ -107,28 +160,32 @@ void addLast(struct Node** head, int value) {
     temp->next = newNode;
 }
 
-void insertAtPosition(struct Node** head, int value, int position) {
-    if (position < 1) {
-        printf("vi tri khong hop le!\n");
+void addAtPos(struct Node** head, int value, int pos) {
+	//b1 kiem tra vi tri
+    if (pos < 1) {
+        printf("\t \t \t \t Vi tri them khong hop le!\n");
         return;
     }
-
+	
+	//b2 tao node moi
     struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
     newNode->data = value;
 
-    if (position == 1) {
+	// b3 thay doi con tro ow vi tri can them
+	// neu vi tri dau
+    if (pos == 1) {
         newNode->next = *head;
         *head = newNode;
         return;
     }
 
+	// neu vi tri lon hon 1
     struct Node* temp = *head;
-    for (int i = 1; i < position - 1 && temp != NULL; i++) {
+    for (int i = 1; i < pos - 1 && temp != NULL; i++) {
         temp = temp->next;
     }
-
     if (temp == NULL) {
-        printf("vi tri vuot qua danh sach!\n");
+        printf("\t \t \t \t vi tri vuot qua danh sach!\n");
         free(newNode);
         return;
     }
@@ -137,20 +194,23 @@ void insertAtPosition(struct Node** head, int value, int position) {
     temp->next = newNode;
 }
 
-void deleteFirst(struct Node** head) {
+void deleteFromHead(struct Node** head) {
+	//b1 kiem tra rong
     if (*head == NULL) {
-        printf("danh sach trong!\n");
+        printf("\t \t \t \t danh sach trong!\n");
         return;
     }
-
+	
+	//b2 thay doi con tro va giai phong node xoa
     struct Node* temp = *head;
     *head = (*head)->next;
     free(temp);
 }
 
-void deleteLast(struct Node** head) {
+void deleteFromTail(struct Node** head) {
+	//b1 kiem tra rong va kiem tra co 1 phan tu
     if (*head == NULL) {
-        printf("danh sach trong!\n");
+        printf("\t \t \t \t danh sach trong!\n");
         return;
     }
 
@@ -159,7 +219,8 @@ void deleteLast(struct Node** head) {
         *head = NULL;
         return;
     }
-
+	
+	// b2 duyet den cuoi va thay doi con tro
     struct Node* temp = *head;
     while (temp->next != NULL && temp->next->next != NULL) {
         temp = temp->next;
@@ -169,26 +230,28 @@ void deleteLast(struct Node** head) {
     temp->next = NULL;
 }
 
-void deleteByValue(struct Node** head, int value) {
+void deleteByValue(struct Node** head, int deleteValue) {
+	//b1 kiem tra rong
     if (*head == NULL) {
-        printf("danh sach trong!\n");
+        printf("\t \t \t \t danh sach trong!\n");
         return;
     }
 
     struct Node* temp = *head;
-
-    if ((*head)->data == value) {
+	
+	//b2 tim kiem gia tri trong ds
+    if ((*head)->data == deleteValue) {
         *head = (*head)->next;
         free(temp);
         return;
     }
 
-    while (temp->next != NULL && temp->next->data != value) {
+    while (temp->next != NULL && temp->next->data != deleteValue) {
         temp = temp->next;
     }
 
     if (temp->next == NULL) {
-        printf("khong tim thay phan tu co gia tri %d\n", value);
+        printf("\t \t \t \t khong tim thay phan tu co gia tri %d\n", deleteValue);
         return;
     }
 
@@ -197,29 +260,16 @@ void deleteByValue(struct Node** head, int value) {
     free(nodeToDelete);
 }
 
-void searchByValue(struct Node* head, int value) {
+void searchByValue(struct Node* head, int searchValue) {
     struct Node* temp = head;
     while (temp != NULL) {
-        if (temp->data == value) {
-            printf("tim thay phan tu co gia tri %d\n", value);
+        if (temp->data == searchValue) {
+            printf("\t \t \t \t tim thay phan tu co gia tri %d\n", searchValue);
             return;
         }
         temp = temp->next;
     }
-    printf("khong tim thay phan tu co gia tri %d\n", value);
+    printf("\t \t \t \t khong tim thay phan tu co gia tri %d\n", searchValue);
 }
 
-void printList(struct Node* head) {
-    if (head == NULL) {
-        printf("danh sach trong!\n");
-        return;
-    }
-
-    struct Node* temp = head;
-    while (temp != NULL) {
-        printf("%d -> ", temp->data);
-        temp = temp->next;
-    }
-    printf("NULL\n");
-}
 
